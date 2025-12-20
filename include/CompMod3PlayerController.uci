@@ -8,6 +8,9 @@ var array<MapAliasMapping> MapAliasMappings;
 
 var bool bShownOptimizationTip;  // Track if we've shown the optimization tip to this player
 
+// Camera shake configuration
+var globalconfig bool bDisableScreenShake;  // Disable all camera shake effects (flinch, dazed, hits)
+
 
 reliable server function bool IsAdmin() {
     return WorldInfo.Game.AccessControl.IsAdmin(self) || WorldInfo.NetMode == NM_Standalone;
@@ -775,6 +778,60 @@ function ReplicateMove(float DeltaTime, vector NewAccel, eDoubleClickDir DoubleC
 			OldMove );
 
 	PendingMove = None;
+}
+
+// Override camera shake functions to respect bDisableScreenShake setting
+function PlayDazedCam()
+{
+	if (!bDisableScreenShake)
+	{
+		super.PlayDazedCam();
+	}
+}
+
+function PlayFlinchCam()
+{
+	if (!bDisableScreenShake)
+	{
+		super.PlayFlinchCam();
+	}
+}
+
+function PlayCustomCamAnim(CameraAnim Anim, optional float DesiredLength = 0.f)
+{
+	if (!bDisableScreenShake)
+	{
+		super.PlayCustomCamAnim(Anim, DesiredLength);
+	}
+}
+
+function PC_ReceiveHit(Actor DamageDealer, vector HitLoc, float Damage, class<DamageType> DamageType)
+{
+	if (!bDisableScreenShake)
+	{
+		super.PC_ReceiveHit(DamageDealer, HitLoc, Damage, DamageType);
+	}
+	else
+	{
+		// Still play the directional hit effect even when screen shake is disabled
+		if(Controller(DamageDealer) != none)
+		{
+			DamageDealer = Controller(DamageDealer).Pawn;
+		}
+		ClientPlayTakeDirHitEffect(DamageDealer, HitLoc, Damage, DamageType);
+	}
+}
+
+// Console command to toggle screen shake
+exec function DisableScreenShake(bool bDisable)
+{
+	bDisableScreenShake = bDisable;
+	SaveConfig();
+	
+	if (bDisable)
+		ClientDisplayConsoleMessage("Screen shake disabled");
+	else
+		ClientDisplayConsoleMessage("Screen shake enabled");
 }
 
 DefaultProperties
