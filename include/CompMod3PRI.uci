@@ -20,15 +20,15 @@ function CopyProperties(PlayerReplicationInfo PRI)
 
         Isn't that epic?
      */
-    CompModAOCDuelPRI(PRI).OriginalName = OriginalName;
-    CompModCDWDuelPRI(PRI).OriginalName = OriginalName;
-    CompModCTFPRI(PRI).OriginalName = OriginalName;
-    CompModFFAPRI(PRI).OriginalName = OriginalName;
-    CompModKOTHPRI(PRI).OriginalName = OriginalName;
-    CompModLTSPRI(PRI).OriginalName = OriginalName;
-    CompModTDPRI(PRI).OriginalName = OriginalName;
-    CompModTOPRI(PRI).OriginalName = OriginalName;
-    CompModTUTPRI(PRI).OriginalName = OriginalName;
+    CompMod3AOCDuelPRI(PRI).OriginalName = OriginalName;
+    CompMod3CDWDuelPRI(PRI).OriginalName = OriginalName;
+    CompMod3CTFPRI(PRI).OriginalName = OriginalName;
+    CompMod3FFAPRI(PRI).OriginalName = OriginalName;
+    CompMod3KOTHPRI(PRI).OriginalName = OriginalName;
+    CompMod3LTSPRI(PRI).OriginalName = OriginalName;
+    CompMod3TDPRI(PRI).OriginalName = OriginalName;
+    CompMod3TOPRI(PRI).OriginalName = OriginalName;
+    CompMod3TUTPRI(PRI).OriginalName = OriginalName;
 }
 
 

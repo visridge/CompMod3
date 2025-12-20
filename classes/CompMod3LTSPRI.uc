@@ -1,7 +1,7 @@
 class CompMod3LTSPRI extends AOCLTSPRI;
 
 `include(CompMod3/Include/CompMod3LTS.uci)
-`include(CompMod3/Include/CompModPRI.uci)
+`include(CompMod3/Include/CompMod3PRI.uci)
 
 
 function Reset()

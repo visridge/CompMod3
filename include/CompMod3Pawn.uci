@@ -2,6 +2,9 @@ var float fLastParryTimeSeconds;                // The game time at which the pa
 var float fSuccessiveParryStaminaReward;        // How much stamina is rewarded for rewardable parries
 var float fSuccessiveParryThresholdSeconds;     // The maximum time in seconds after the pawn's last parry that they are eligible for reward
 
+var float fParryTimeSeconds;                    // Temporary variable for parry time calculations
+var bool bRewardableParry;                      // Temporary variable for parry reward eligibility
+
 
 simulated function bool ShouldActivateFlinch(HitInfo Info, class<AOCWeapon> UsedWeapon) {
 	// If the weapon is set never to flinch, don't flinch
@@ -537,9 +540,6 @@ simulated function bool DetectSuccessfulParry(out HitInfo Info, out int bParry, 
 	}
 	// Was it a normal parry?
 	else if (Info.HitActor.StateVariables.bIsParrying) {
-		local float fParryTimeSeconds;
-		local bool bRewardableParry;
-		
 		AOCWeaponAttachment(Info.HitActor.CurrentWeaponAttachment).PlayParrySound(false);
 		fParryTimeSeconds = WorldInfo.TimeSeconds;
 		bRewardableParry = CompMod3Pawn(Info.HitActor).fLastParryTimeSeconds > 0 &&
