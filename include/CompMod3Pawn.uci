@@ -1,3 +1,8 @@
+var float fLastParryTimeSeconds;                // The game time at which the pawn last parried
+var float fSuccessiveParryStaminaReward;        // How much stamina is rewarded for rewardable parries
+var float fSuccessiveParryThresholdSeconds;     // The maximum time in seconds after the pawn's last parry that they are eligible for reward
+
+
 simulated function bool ShouldActivateFlinch(HitInfo Info, class<AOCWeapon> UsedWeapon) {
 	// If the weapon is set never to flinch, don't flinch
 	if (UsedWeapon.default.bNeverFlinch)
@@ -532,10 +537,19 @@ simulated function bool DetectSuccessfulParry(out HitInfo Info, out int bParry, 
 	}
 	// Was it a normal parry?
 	else if (Info.HitActor.StateVariables.bIsParrying) {
+		local float fParryTimeSeconds;
+		local bool bRewardableParry;
+		
 		AOCWeaponAttachment(Info.HitActor.CurrentWeaponAttachment).PlayParrySound(false);
+		fParryTimeSeconds = WorldInfo.TimeSeconds;
+		bRewardableParry = CompMod3Pawn(Info.HitActor).fLastParryTimeSeconds > 0 &&
+		                   fParryTimeSeconds - CompMod3Pawn(Info.HitActor).fLastParryTimeSeconds <= fSuccessiveParryThresholdSeconds;
+		CompMod3Pawn(Info.HitActor).fLastParryTimeSeconds = fParryTimeSeconds;
 
-		// Lose 15 stamina for projectiles, otherwise calculate stamina loss
-		if (Info.DamageType.default.bIsProjectile)
+		// Take no stamina damage if within successive parry reward threshold, lose 15 stamina for projectiles, otherwise calculate stamina loss
+		if (bRewardableParry)
+			StaminaDamage = 0.0f;
+		else if (Info.DamageType.default.bIsProjectile)
 			StaminaDamage = 15.0f;
 		else
 			StaminaDamage = AOCWeapon(Info.HitActor.Weapon).CalculateParryDamage(AOCWeapon(Info.Instigator.Weapon), Info.AttackType);
@@ -564,8 +578,17 @@ simulated function bool DetectSuccessfulParry(out HitInfo Info, out int bParry, 
 
 		if(bOutOfStamina)
 			return true;
-
-		Info.HitActor.ConsumeStamina(StaminaDamage);
+		
+		if (bRewardableParry){
+			if(fSuccessiveParryStaminaReward + Info.HitActor.Stamina >= MaxStamina){
+				StaminaDamage = MaxStamina - Info.HitActor.Stamina;
+				Info.HitActor.ConsumeStamina(-StaminaDamage);
+			}
+			else
+				Info.HitActor.ConsumeStamina(-fSuccessiveParryStaminaReward);
+		}
+		else
+			Info.HitActor.ConsumeStamina(StaminaDamage);
 
 		// Parry means health damage is completely negated
 		Info.HitDamage = 0.0f;
@@ -703,6 +726,9 @@ DefaultProperties
 	
 	HealthTimeElapse=0.0
 	HealAmount=3.0
+
+	fSuccessiveParryStaminaReward=35
+	fSuccessiveParryThresholdSeconds=1
 
 	Begin Object Name=OuterCylinder
 	    CollisionRadius=+0039.000000
