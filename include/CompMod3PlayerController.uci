@@ -6,6 +6,8 @@ struct MapAliasMapping
 };
 var array<MapAliasMapping> MapAliasMappings;
 
+var bool bShownOptimizationTip;  // Track if we've shown the optimization tip to this player
+
 
 reliable server function bool IsAdmin() {
     return WorldInfo.Game.AccessControl.IsAdmin(self) || WorldInfo.NetMode == NM_Standalone;
@@ -32,6 +34,28 @@ reliable server function S_BroadcastServerMessage(string Message, optional bool 
         else
             PC.ReceiveChatMessage(Message, EFAC_ALL, false, false, ,false);
     }
+}
+
+// Override Possess to show optimization tip on first spawn
+event Possess(Pawn inPawn, bool bVehicleTransition)
+{
+    super.Possess(inPawn, bVehicleTransition);
+    
+    // Show optimization tip once when player first spawns
+    if (!bShownOptimizationTip && Role == ROLE_Authority)
+    {
+        bShownOptimizationTip = true;
+        SetTimer(2.0f, false, 'ShowOptimizationTip');
+    }
+}
+
+// Send optimization tip as a server message that appears in chat
+function ShowOptimizationTip()
+{
+    ReceiveChatMessage("=== CompMod Performance Tip ===", EFAC_ALL, false, true, "#00FF00");
+    ReceiveChatMessage("For best experience, edit UDKEngine.ini and set:", EFAC_ALL, false, true, "#FFAA00");  
+    ReceiveChatMessage("  NetClientTicksPerSecond=120", EFAC_ALL, false, true, "#FFFFFF");
+    ReceiveChatMessage("File: Documents\\My Games\\Chivalry Medieval Warfare\\UDKGame\\Config\\UDKEngine.ini", EFAC_ALL, false, true, "#FFAA00");
 }
 
 reliable server function ServerAdminChangeTeam(String PlayerName)
@@ -584,9 +608,153 @@ exec function PerformAim() {
         StartFire(1);
 }
 
+// Override ReplicateMove to set fixed 120Hz client movement updates (improves netcode smoothness)
+function ReplicateMove(float DeltaTime, vector NewAccel, eDoubleClickDir DoubleClickMove, rotator DeltaRot)
+{
+	local SavedMove NewMove, OldMove, AlmostLastMove, LastMove;
+	local byte ClientRoll;
+	local float NetMoveDelta;
+	local int OldServerTimeStamp;
+	local vector OldAccel;
+
+	// do nothing if we are no longer connected
+	if (Player == None)
+	{
+		return;
+	}
+
+	MaxResponseTime = Default.MaxResponseTime * WorldInfo.TimeDilation;
+	DeltaTime = ((Pawn != None) ? Pawn.CustomTimeDilation : CustomTimeDilation) * FMin(DeltaTime, MaxResponseTime);
+
+	// find the most recent move (LastMove), and the oldest (unacknowledged) important move (OldMove)
+	// a SavedMove is interesting if it differs significantly from the last acknowledged move
+	if ( SavedMoves != None )
+	{
+		LastMove = SavedMoves;
+		AlmostLastMove = LastMove;
+		OldMove = None;
+		while ( LastMove.NextMove != None )
+		{
+			// find first important unacknowledged move
+			if ( (OldMove == None) && (Pawn != None) && LastMove.IsImportantMove(LastAckedAccel) )
+			{
+				OldMove = LastMove;
+			}
+			AlmostLastMove = LastMove;
+			LastMove = LastMove.NextMove;
+		}
+	}
+
+	// Get a SavedMove object to store the movement in.
+	NewMove = GetFreeMove();
+	if ( NewMove == None )
+	{
+		return;
+	}
+	NewMove.SetMoveFor(self, DeltaTime, NewAccel, DoubleClickMove);
+
+	// Simulate the movement locally.
+	bDoubleJump = false;
+	ProcessMove(NewMove.Delta, NewMove.Acceleration, NewMove.DoubleClickMove, DeltaRot);
+
+	// see if the two moves could be combined
+	if ( (PendingMove != None) && PendingMove.CanCombineWith(NewMove, Pawn, MaxResponseTime) )
+	{
+		// to combine move, first revert pawn position to PendingMove start position, before playing combined move on client
+		Pawn.SetLocation(PendingMove.GetStartLocation());
+		Pawn.Velocity = PendingMove.StartVelocity;
+		if( PendingMove.StartBase != Pawn.Base )
+		{
+			Pawn.SetBase(PendingMove.StartBase);
+		}
+		Pawn.Floor = PendingMove.StartFloor;
+		NewMove.Delta += PendingMove.Delta;
+		NewMove.SetInitialPosition(Pawn);
+
+		// remove pending move from move list
+		if ( LastMove == PendingMove )
+		{
+			if ( SavedMoves == PendingMove )
+			{
+				SavedMoves.NextMove = FreeMoves;
+				FreeMoves = SavedMoves;
+				SavedMoves = None;
+			}
+			else
+			{
+				PendingMove.NextMove = FreeMoves;
+				FreeMoves = PendingMove;
+				if ( AlmostLastMove != None )
+				{
+					AlmostLastMove.NextMove = None;
+					LastMove = AlmostLastMove;
+				}
+			}
+			FreeMoves.Clear();
+		}
+		PendingMove = None;
+	}
+
+	if( Pawn != None )
+	{
+		Pawn.AutonomousPhysics(NewMove.Delta);
+	}
+	else
+	{
+		AutonomousPhysics(DeltaTime);
+	}
+	NewMove.PostUpdate(self);
+
+	if( SavedMoves == None )
+	{
+		SavedMoves = NewMove;
+	}
+	else
+	{
+		LastMove.NextMove = NewMove;
+	}
+
+	if ( PendingMove == None )
+	{
+		// CompMod3: Fixed 120Hz update rate for improved netcode
+		// Original code had dynamic rates: 90Hz (<=10 players) or 45Hz+ (>10 players) on listen servers, 20Hz on dedicated
+		// Setting to 0.00833 (~120Hz) matches the server's max tickrate for optimal smoothness
+		NetMoveDelta = 0.00833;
+
+		if( (WorldInfo.TimeSeconds - ClientUpdateTime) * WorldInfo.TimeDilation < NetMoveDelta )
+		{
+			PendingMove = NewMove;
+			return;
+		}
+	}
+
+	ClientUpdateTime = WorldInfo.TimeSeconds;
+
+	// check if need to redundantly send previous move
+	if ( OldMove != None )
+	{
+		// old move is important to replicate redundantly
+		OldServerTimeStamp = OldMove.TimeStamp;
+		OldAccel = OldMove.Acceleration;
+	}
+
+	// Send to the server
+	ClientRoll = (Rotation.Roll >> 8) & 255;
+
+	CallServerMove( NewMove,
+			((Pawn == None) ? Location : Pawn.Location),
+			ClientRoll,
+			((Rotation.Yaw & 65535) << 16) + (Rotation.Pitch & 65535),
+			OldMove );
+
+	PendingMove = None;
+}
 
 DefaultProperties
 {
+    // CompMod3: 120Hz server->client player controller updates for optimal netcode
+    NetUpdateFrequency=120
+    
     suicideDelay = 1.0f
 
     // AdminGoTo

@@ -680,9 +680,21 @@ simulated function FinishDodgeFlinch() {
 	DodgeSM.StartQueuedAttack();
 }
 
+// Netcode optimization: Maximum performance for all pawns
+// 120Hz update frequency for all distances
+event float GetNetPriority(Actor Viewer, vector ViewLocation, float ViewDist)
+{
+	// Always use maximum priority and frequency for all pawns
+	NetUpdateFrequency = 120.0;
+	return 5000.0;
+}
+
 // Default class properties
 DefaultProperties
 {
+	// CompMod3: 120Hz server->client pawn updates (matches server tickrate for optimal smoothness)
+	NetUpdateFrequency=120
+	
 	HealthTimeElapse=0.0
 	HealAmount=3.0
 
