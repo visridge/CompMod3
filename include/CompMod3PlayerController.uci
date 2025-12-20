@@ -36,10 +36,37 @@ reliable server function S_BroadcastServerMessage(string Message, optional bool 
     }
 }
 
-// Override Possess to show optimization tip on first spawn
+// Override to prevent players from enabling ragdolls via console commands
+exec function SetRagdollLimit(int NewLimit)
+{
+    // Always force to 0 regardless of what player requests
+    MaxRagdolls = 0;
+    default.MaxRagdolls = 0;
+    
+    // Clean up any existing ragdolls
+    if (RagdolledPawns.Length > 0)
+    {
+        RemoveRagdolls(RagdolledPawns.Length);
+    }
+}
+
+// Override to prevent ragdolls from being added in the first place
+function AddRagdolledPawn(AOCPawn RagdolledPawn)
+{
+    // Immediately remove the ragdoll - don't add it to the list
+    if (RagdolledPawn != none)
+    {
+        RagdolledPawn.LifeSpan = 0.1f;
+    }
+}
+
+// Override Possess to enforce ragdoll limit and show optimization tip on first spawn
 event Possess(Pawn inPawn, bool bVehicleTransition)
 {
     super.Possess(inPawn, bVehicleTransition);
+    
+    // Force ragdolls disabled on every spawn (catches players with read-only configs)
+    ConsoleCommand("SetRagdollLimit 0");
     
     // Show optimization tip once when player first spawns
     if (!bShownOptimizationTip && Role == ROLE_Authority)
