@@ -611,7 +611,13 @@ function bool StartDodge(int direction)
 
 	if ( bIsCrouching || (Physics != PHYS_Walking && Physics != PHYS_Falling) || PawnState == ESTATE_FROZEN || PawnState == ESTATE_SIEGEWEAPON || PawnState == ESTATE_DODGE )
 		return false;
-	if( StateVariables.bCanDodge && !StateVariables.bIsSprinting && !StateVariables.bDodgeDebuffActive && PawnFamily.bCanDodge && AOCWeapon(Weapon).bCanDodge && Velocity.Z ~= 0.0 )
+	
+	// Custom: Block backward dodge while airborne (direction 3 = DCLICK_Back)
+	// Check if Z velocity is NOT approximately zero (player is jumping/falling, not on ground)
+	if (!(Velocity.Z ~= 0.0) && direction == 2)
+		return false;
+	
+	if( StateVariables.bCanDodge && !StateVariables.bDodgeDebuffActive && PawnFamily.bCanDodge && AOCWeapon(Weapon).bCanDodge)
 	{
 		if (!HasEnoughStamina(CalcDodgeCost()))
 		{
