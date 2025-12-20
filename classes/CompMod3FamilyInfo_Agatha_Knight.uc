@@ -28,7 +28,7 @@ DefaultProperties
 	NewSecondaryWeapons(10)=(CWeapon=class'CompMod3Weapon_HFlail')
 
 	NewTertiaryWeapons.empty;
-	NewTertiaryWeapons(0)=(CWeapon=class'CompMod3Weapon_ThrowingAxe')
+	NewTertiaryWeapons(0)=(CWeapon=class'CompMod3Weapon_HuntingKnife')
 	NewTertiaryWeapons(1)=(CWeapon=class'CompMod3Weapon_TowerShield_Agatha')
 	NewTertiaryWeapons(2)=(CWeapon=class'CompMod3Weapon_Heater_Agatha',bEnabledDefault=true)
 	NewTertiaryWeapons(3)=(CWeapon=class'CompMod3Weapon_Kite_Agatha')

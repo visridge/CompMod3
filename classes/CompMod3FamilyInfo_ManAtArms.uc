@@ -39,8 +39,8 @@ DefaultProperties
 	NewSecondaryWeapons(5)=(CWeapon=class'AOCWeapon_Cudgel',CheckLimitExpGroup=EEXP_LIGHTAUX,UnlockExpLevel=100.f,CorrespondingDuelProp=EDUEL_CudgelUse)
 
 	NewTertiaryWeapons(0)=(CWeapon=class'AOCWeapon_ThrowingKnife')
-	NewTertiaryWeapons(1)=(CWeapon=class'AOCWeapon_OilPot')
-	NewTertiaryWeapons(2)=(CWeapon=class'AOCWeapon_Buckler')
+	// NewTertiaryWeapons(1)=(CWeapon=class'AOCWeapon_OilPot')
+	NewTertiaryWeapons(1)=(CWeapon=class'AOCWeapon_Buckler')
 
 	PawnArmorType = ARMORTYPE_LIGHT
 

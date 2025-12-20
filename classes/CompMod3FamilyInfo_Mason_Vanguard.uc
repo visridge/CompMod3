@@ -27,9 +27,7 @@ DefaultProperties
 	NewSecondaryWeapons(8)=(CWeapon=class'CompMod3Weapon_NorseSword')
 
 	NewTertiaryWeapons.empty;
-	NewTertiaryWeapons(0)=(CWeapon=class'CompMod3Weapon_ThrowingAxe')
-	NewTertiaryWeapons(1)=(CWeapon=class'CompMod3Weapon_ThrowingKnife')
-	NewTertiaryWeapons(2)=(CWeapon=class'CompMod3Weapon_SmokePot')
+	NewTertiaryWeapons(0)=(CWeapon=class'CompMod3Weapon_HuntingKnife')
 
 
 	bCanSprintAttack=false

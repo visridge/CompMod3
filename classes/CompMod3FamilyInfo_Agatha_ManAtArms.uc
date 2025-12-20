@@ -25,9 +25,9 @@ DefaultProperties
 
 	NewTertiaryWeapons.empty;
 	NewTertiaryWeapons(0)=(CWeapon=class'CompMod3Weapon_ThrowingKnife')
-	NewTertiaryWeapons(1)=(CWeapon=class'CompMod3Weapon_OilPot')
-	NewTertiaryWeapons(2)=(CWeapon=class'CompMod3Weapon_Buckler_Agatha')
-	NewTertiaryWeapons(3)=(CWeapon=class'AOCWeapon_Heater_Agatha')
+	// NewTertiaryWeapons(1)=(CWeapon=class'CompMod3Weapon_OilPot')
+	NewTertiaryWeapons(1)=(CWeapon=class'CompMod3Weapon_Buckler_Agatha')
+	NewTertiaryWeapons(2)=(CWeapon=class'AOCWeapon_Heater_Agatha')
 
 	bCanDodge=true
 
