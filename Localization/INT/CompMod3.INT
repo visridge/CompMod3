@@ -1,0 +1,29 @@
+[ChatMessages]
+Welcome=Welcome to Comp Mod!
+
+[CompMod3Weapon_Warbow]
+WeaponName=Warbow
+
+[CompMod3Weapon_Longbow]
+WeaponName=Longbow
+
+[CompMod3Weapon_Shortbow]
+WeaponName=Shortbow
+
+[CompMod3Weapon_HeavyCrossbow]
+WeaponName=Heavy Crossbow
+
+[CompMod3Weapon_LightCrossbow]
+WeaponName=Light Crossbow
+
+[CompMod3Weapon_Crossbow]
+WeaponName=Crossbow
+
+[CompMod3Weapon_HeavyCrossbow]
+WeaponName=Heavy Crossbow
+
+[CompMod3Weapon_Sling]
+WeaponName=Sling
+
+[CompMod3Weapon_ProjWarbowArrow]
+WeaponName=Warbow Arrow

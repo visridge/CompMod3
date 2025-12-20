@@ -1,0 +1,7 @@
+``define GAMEMODE CompMod33TO
+
+DefaultProperties
+{
+MinimumRespawnTime = 10.0
+
+}
