@@ -7,13 +7,11 @@ DefaultProperties
 	NewPrimaryWeapons(0)=(CWeapon=class'CompMod3Weapon_Greatsword',CorrespondingDuelProp=EDUEL_GreatswordUse)
 	NewPrimaryWeapons(1)=(CWeapon=class'CompMod3Weapon_Claymore',CorrespondingDuelProp=EDUEL_ClaymoreUse)
 	NewPrimaryWeapons(2)=(CWeapon=class'CompMod3Weapon_Zweihander',CorrespondingDuelProp=EDUEL_ZweihanderUse)
-	NewPrimaryWeapons(3)=(CWeapon=class'CompMod3Weapon_Spear',CorrespondingDuelProp=EDUEL_SpearUse)
-	NewPrimaryWeapons(4)=(CWeapon=class'CompMod3Weapon_Fork',CorrespondingDuelProp=EDUEL_ForkUse)
-	NewPrimaryWeapons(5)=(CWeapon=class'CompMod3Weapon_Brandistock',CorrespondingDuelProp=EDUEL_BrandistockUse)
-	NewPrimaryWeapons(6)=(CWeapon=class'CompMod3Weapon_Bardiche',CorrespondingDuelProp=EDUEL_BardicheUse)
-	NewPrimaryWeapons(7)=(CWeapon=class'CompMod3Weapon_Bill',CorrespondingDuelProp=EDUEL_BillUse)
-	NewPrimaryWeapons(8)=(CWeapon=class'CompMod3Weapon_Halberd',CorrespondingDuelProp=EDUEL_HalberdUse)
-	NewPrimaryWeapons(9)=(CWeapon=class'CompMod3Weapon_PoleHammer',CorrespondingDuelProp=EDUEL_PoleHammerUse)
+	NewPrimaryWeapons(3)=(CWeapon=class'CompMod3Weapon_Fork',CorrespondingDuelProp=EDUEL_ForkUse)
+	NewPrimaryWeapons(4)=(CWeapon=class'CompMod3Weapon_Bardiche',CorrespondingDuelProp=EDUEL_BardicheUse)
+	NewPrimaryWeapons(5)=(CWeapon=class'CompMod3Weapon_Bill',CorrespondingDuelProp=EDUEL_BillUse)
+	NewPrimaryWeapons(6)=(CWeapon=class'CompMod3Weapon_Halberd',CorrespondingDuelProp=EDUEL_HalberdUse)
+	NewPrimaryWeapons(7)=(CWeapon=class'CompMod3Weapon_PoleHammer',CorrespondingDuelProp=EDUEL_PoleHammerUse)
 
 	NewSecondaryWeapons.empty;
 	NewSecondaryWeapons(0)=(CWeapon=class'CompMod3Weapon_Dagesse',CorrespondingDuelProp=EDUEL_DagesseUse)

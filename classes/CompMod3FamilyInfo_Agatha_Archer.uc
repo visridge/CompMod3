@@ -13,6 +13,8 @@ DefaultProperties
 	NewPrimaryWeapons(7)=(CWeapon=class'CompMod3Weapon_ShortSpearMelee',CForceTertiary=(class'CompMod3Weapon_Buckler_Agatha'))
 	NewPrimaryWeapons(8)=(CWeapon=class'CompMod3Weapon_HeavyJavelinMelee',CForceTertiary=(class'CompMod3Weapon_Buckler_Agatha'))
 	NewPrimaryWeapons(9)=(CWeapon=class'CompMod3Weapon_Sling',CForceTertiary=(class'AOCWeapon_ProjPebble',class'AOCWeapon_ProjLeadBall'))
+	NewPrimaryWeapons(10)=(CWeapon=class'CompMod3Weapon_Brandistock',CorrespondingDuelProp=EDUEL_BrandistockUse)
+	NewPrimaryWeapons(11)=(CWeapon=class'CompMod3Weapon_Spear',CorrespondingDuelProp=EDUEL_SpearUse)
 
 	NewSecondaryWeapons.empty;
 	NewSecondaryWeapons(0)=(CWeapon=class'CompMod3Weapon_BroadDagger')
