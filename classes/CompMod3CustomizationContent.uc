@@ -1,4 +1,4 @@
-﻿class CompMod3CustomizationContent extends AOCCustomizationContent;
+class CompMod3CustomizationContent extends AOCCustomizationContent;
 static function int GetDefaultCharacterIDFor(int Team, int PawnClass)
 {
     LogAlwaysInternal("GetDefaultCharacterIDFor"@Team@PawnClass);
