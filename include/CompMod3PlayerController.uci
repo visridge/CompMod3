@@ -1,3 +1,5 @@
+var CompMod3CustomizationContent CustomizationBaseDummy;
+
 // AdminGoTo
 struct MapAliasMapping
 {
@@ -11,6 +13,16 @@ var bool bShownOptimizationTip;  // Track if we've shown the optimization tip to
 // Camera shake configuration
 var globalconfig bool bDisableScreenShake;  // Disable all camera shake effects (flinch, dazed, hits)
 
+
+// Ensure CompMod3 uses its customization class everywhere
+simulated event PostBeginPlay()
+{
+	super.PostBeginPlay();
+	if (CustomizationClass != class'CompMod3Customization')
+	{
+		CustomizationClass = class'CompMod3Customization';
+	}
+}
 
 reliable server function bool IsAdmin() {
     return WorldInfo.Game.AccessControl.IsAdmin(self) || WorldInfo.NetMode == NM_Standalone;
@@ -840,6 +852,7 @@ DefaultProperties
     NetUpdateFrequency=120
     
     suicideDelay = 1.0f
+    CustomizationClass=class'CompMod3Customization'
 
     // AdminGoTo
     MapAliasMappings(0)=(url="AOCFFA-Duelyard_p", alias="DY")
