@@ -1,5 +1,27 @@
 
 
+var CompMod3GFx_EscapeMain     EscapeMenu;
+
+exec function ShowEscapeMenu(optional bool bPlaySound = true)
+{
+	if (EscapeMenu == none || !EscapeMenu.bMovieIsOpen)
+	{
+		if (bPlaySound)
+			AOCPlayerController(PlayerOwner).PlayEscapeMenuSound(true);
+
+		EscapeMenu = none;
+		EscapeMenu = CompMod3GFx_EscapeMain(OpenGFxScene(EscapeMenu, class'CompMod3GFx_EscapeMain', true, true, true, false));
+		EscapeMenu.Start();
+	}
+}
+
+function RemoveEscapeMenu()
+{
+	EscapeMenu.SetMovieCanReceiveFocus(false);
+	EscapeMenu.Close(true);
+	EscapeMenu = none;
+	ShowCursor(false);
+}
 
 DefaultProperties
 {
