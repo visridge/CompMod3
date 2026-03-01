@@ -622,6 +622,48 @@ reliable server function S_AdminGoTo(optional string MapAlias) {
 
 }
 
+// Slump map shortcuts (cross-referenced from BangMod)
+exec function AdminGotoSF() {
+    if (!IsAdmin()) { NotifyNotAdmin(); return; }
+    ServerChangeMap("AOCTO-Slumforest_p");
+}
+
+exec function AdminGotoSH() {
+    if (!IsAdmin()) { NotifyNotAdmin(); return; }
+    ServerChangeMap("AOCTO-Slumpshill_p");
+}
+
+exec function AdminGotoSP() {
+    if (!IsAdmin()) { NotifyNotAdmin(); return; }
+    ServerChangeMap("AOCTO-Slumppost_p");
+}
+
+exec function AdminGotoDuel() {
+    if (!IsAdmin()) { NotifyNotAdmin(); return; }
+    ServerChangeMap("aocffa-SlumYard_p");
+}
+
+exec function AdminGotoMoor() {
+    if (!IsAdmin()) { NotifyNotAdmin(); return; }
+    ServerChangeMap("AOCLTS-Moor_p");
+}
+
+exec function AdminGotoKendo() {
+    if (!IsAdmin()) { NotifyNotAdmin(); return; }
+    ServerChangeMap("AOCTDM-Moor_p");
+}
+
+exec function AdminGotoOF() {
+    if (!IsAdmin()) { NotifyNotAdmin(); return; }
+    ServerChangeMap("AOCTO-OldForest_p");
+}
+
+// Switch to BangMod/SlumpMod server (players without the mod will be kicked and must rejoin manually)
+exec function AdminGotoSlumpMod() {
+    if (!IsAdmin()) { NotifyNotAdmin(); return; }
+    ServerChangeMap("AOCFFA-YeedYard_p?modname=BangMod");
+}
+
 exec function AdminForceSpectate(String PlayerName) {
     S_AdminForceSpectate(PlayerName);
 }
@@ -914,4 +956,12 @@ DefaultProperties
     MapAliasMappings(11)=(url="AOCTO-Cove-CM_P", alias="CV")
     MapAliasMappings(12)=(url="AOCTO-DrunkenBazaar-CM_p", alias="DB")
     MapAliasMappings(13)=(url="AOCTO-KingsGarden-CM_p", alias="KG")
+
+    // Slump custom maps
+    MapAliasMappings(14)=(url="AOCTO-Slumforest_p", alias="SF")
+    MapAliasMappings(15)=(url="AOCTO-Slumpshill_p", alias="SSH")
+    MapAliasMappings(16)=(url="AOCTO-Slumppost_p", alias="SP")
+    MapAliasMappings(17)=(url="aocffa-SlumYard_p", alias="SY")
+    MapAliasMappings(18)=(url="AOCTDM-Moor_p", alias="KD")
+    MapAliasMappings(19)=(url="AOCTO-OldForest_p", alias="OF")
 }
